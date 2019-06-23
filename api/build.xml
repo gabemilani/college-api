@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Universidade" basedir="." default="deploy">
+
+	<property name="jboss.dir" value="C:\wildfly-16.0.0.Final" />
+	<property name="jboss.lib.dir" value="${jboss.dir}/modules" />
+	<property name="jboss.deploy" value="${jboss.dir}/standalone/deployments" />
+	<property name="src" value="src" />
+	<property name="bin" value="classes" />
+	<property name="dist" value="dist" />
+	<property name="lib" value="lib" />
+	<property name="metadata" value="metadata" />
+	<property name="web.dir" value="WebContent" />
+
+
+	<path id="jars">
+		<fileset dir="${jboss.lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<path id="classpath.base">
+		<fileset dir="${lib}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${dist}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean">
+		<delete dir="${bin}" />
+		<delete dir="${dist}" />
+	</target>
+
+	<target name="prepare" depends="init">
+		<mkdir dir="${bin}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${lib}" />
+	</target>
+
+	<target name="init">
+		<echo>Iniciando build do projeto ${ant.project.name}</echo>
+	</target>
+
+	<target name="compile" depends="init, clean, prepare">
+		<javac srcdir="${src}" destdir="${bin}" verbose="false" encoding="UTF-8">
+			<classpath refid="classpath.base" />
+			<classpath refid="jars" />
+		</javac>
+	</target>
+
+
+	<!-- Empacota a aplicação -->
+	<target name="jar" depends="compile">
+		<jar jarfile="${dist}/${ant.project.name}.jar">
+			<fileset dir="${bin}" />
+			<metainf dir="${metadata}">
+				<include name="persistence.xml" />
+			</metainf>
+		</jar>
+	</target>
+
+	<target name="run" depends="jar">
+		<java classname="com.testes.TesteJPA" fork="true">
+			<classpath refid="classpath.base" />
+		</java>
+	</target>
+
+	<target name="war" depends="compile">
+		<war basedir="${web.dir}" warfile="${dist}/${ant.project.name}.war" webxml="${metadata}/web.xml">
+			<classes dir="${bin}" />
+			<classes dir="${metadata}">
+				<include name="META-INF/*" />
+			</classes>			
+			<webinf dir="${metadata}">				
+				<include name="web.xml" />
+			</webinf>
+		</war>
+	</target>
+
+	<target name="deploy" depends="war" description="Copia .war para a pasta deploy do JBoss">
+		<copy file="${dist}/${ant.project.name}.war" todir="${jboss.deploy}" />
+	</target>
+
+</project>
