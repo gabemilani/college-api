@@ -10,55 +10,46 @@ import javax.persistence.Query;
 
 import org.jboss.ws.api.annotation.WebContext;
 
-import com.ejb.intf.CursosSession;
-import com.model.ejb.entity.Curso;
+import com.ejb.intf.DisciplinasSession;
 import com.model.ejb.entity.Disciplina;
 
 @Stateless
-@WebService(name="cursos")
+@WebService(name="disciplinas")
 @WebContext(contextRoot="universidade")
-public class CursoSessionBean implements CursosSession {
+public class DisciplinaSessionBean implements DisciplinasSession {
 
 	@PersistenceContext(unitName="Universidade")
 	private EntityManager em;
 	
 	@Override
-	public void remove(Curso p) {
-		Curso c = em.find(Curso.class, p.getId());
+	public void remove(Disciplina p) {
+		Disciplina c = em.find(Disciplina.class, p.getId());
 		if(c != null)
 			em.remove(c);
 	}
 
 	@Override
-	public Curso insere(Curso c) {
+	public Disciplina insere(Disciplina c) {
 		em.persist(c);
 		return c;
 	}
 
 	@Override
-	public Curso altera(Curso c) {
+	public Disciplina altera(Disciplina c) {
 		em.merge(c);
 		return c;
 	}
 
 	@Override
-	public Curso buscaPorId(Long id) {
-		Curso c = em.find(Curso.class, id);
+	public Disciplina buscaPorId(Long id) {
+		Disciplina c = em.find(Disciplina.class, id);
 		return c;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Curso> buscaTodos() {
-		Query q = em.createNamedQuery("busca.todos.cursos");
+	public List<Disciplina> buscaTodos() {
+		Query q = em.createNamedQuery("busca.todas.disciplinas");
 		return q.getResultList();
 	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Disciplina> buscaDisciplinas(Curso c) {
-		Query q = em.createNamedQuery("busca.disciplinas.curso").setParameter("curso", c);
-		return q.getResultList();
-	}
-
 }

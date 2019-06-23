@@ -5,22 +5,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Curso")
-@SequenceGenerator(name = "Curso_Sequence", sequenceName = "curso_seq", allocationSize = 0, initialValue = 1)
+@Table(name = "Disciplina")
+@SequenceGenerator(name = "Disciplina_Sequence", sequenceName = "disciplina_seq", allocationSize = 0, initialValue = 1)
 @NamedQueries({ 
-	@NamedQuery(name = "busca.todos.cursos", query = "select c from Curso as c"),
-	@NamedQuery(name = "busca.disciplinas.curso", query = "select d from Disciplina as d where d.curso = :curso")
+	@NamedQuery(name = "busca.todas.disciplinas", query = "select d from Disciplina as d")
 })
-public class Curso {
+public class Disciplina {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Curso_Sequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Disciplina_Sequence")
 	private Long id;
 	
 	@Column(name = "codigo", nullable = true)
@@ -29,14 +30,28 @@ public class Curso {
 	@Column(name = "nome", length = 60, nullable = true)
 	private String nome;
 	
-	public Curso() {
+	@Column(name = "cargaHoraria", nullable = true)
+	private int cargaHoraria;
+	
+	@ManyToOne
+	@JoinColumn(name="curso")
+	private Curso curso;
+	
+	@ManyToOne
+	@JoinColumn(name="area")
+	private Area area;
+	
+	public Disciplina() {
 		
 	}
 	
-	public Curso(Long id, String nome, int codigo) {
+	public Disciplina(Long id, String nome, int codigo, int cargaHoraria, Curso curso, Area area) {
 		this.id = id;
 		this.nome = nome;
 		this.codigo = codigo;
+		this.cargaHoraria = cargaHoraria;
+		this.curso = curso;
+		this.area = area;
 	}
 	
 	public Long getId() {
@@ -63,6 +78,30 @@ public class Curso {
 		this.codigo = codigo;
 	}
 	
+	public int getCargaHoraria() {
+		return this.cargaHoraria;
+	}
+	
+	public void setCargaHoraria(int cargaHoraria) { 
+		this.cargaHoraria = cargaHoraria;
+	}
+	
+	public Curso getCurso() {
+		return curso;
+	}
+	
+	public void setCurso(Curso curso) {
+		this.curso = curso;
+	}
+	
+	public Area getArea() {
+		return area;
+	}
+	
+	public void setArea(Area area) {
+		this.area = area;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -77,7 +116,7 @@ public class Curso {
 			return true;
 		if (obj == null || getClass() != obj.getClass())
 			return false;
-		Curso other = (Curso)obj;
+		Disciplina other = (Disciplina)obj;
 		return id == other.id;
 	}
 }

@@ -20,25 +20,25 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.ejb.intf.CursosSession;
-import com.model.dto.CursoDTO;
-import com.model.ejb.entity.Curso;
+import com.ejb.intf.DisciplinasSession;
+import com.model.dto.DisciplinaDTO;
+import com.model.ejb.entity.Disciplina;
 
-@Named("CursoRest")
+@Named("DisciplinaRest")
 @RequestScoped
-@Path("cursos")
-public class CursosRestService {
+@Path("disciplinas")
+public class DisciplinasRestService {
 
 	@EJB
-	private CursosSession session;
+	private DisciplinasSession session;
 	
 	@Context
 	UriInfo uriInfo;
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response get() {		
-		return Response.ok().entity(Mappers.converterLista(session.buscaTodos(), (c) -> Mappers.converteParaDTO(c))).build();
+	public Response get() {
+		return Response.ok().entity(Mappers.converterLista(session.buscaTodos(), d -> Mappers.converteParaDTO(d))).build();
 	}
 
 	@GET
@@ -46,25 +46,11 @@ public class CursosRestService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getPorId(@PathParam("id") Long id) {
 		ResponseBuilder r = null;		
-		Curso c = session.buscaPorId(id);
-		if (c != null) {
-			r = Response.ok().entity(Mappers.converteParaDTO(c));			
+		Disciplina d = session.buscaPorId(id);
+		if (d != null) {
+			r = Response.ok().entity(Mappers.converteParaDTO(d));			
 		} else {
-			r = Response.status(Response.Status.NOT_FOUND).entity("Curso nao encontrado");
-		}
-		return r.build();
-	}
-	
-	@GET
-	@Path("/{id}/disciplinas")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getDisciplinas(@PathParam("id") Long id) {
-		ResponseBuilder r = null;		
-		Curso c = session.buscaPorId(id);
-		if (c != null) {
-			r = Response.ok().entity(Mappers.converterLista(session.buscaDisciplinas(c), d -> Mappers.converteParaDTO(d)));			
-		} else {
-			r = Response.status(Response.Status.NOT_FOUND).entity("Curso nao encontrado");
+			r = Response.status(Response.Status.NOT_FOUND).entity("Disciplina nao encontrada");
 		}
 		return r.build();
 	}
@@ -72,8 +58,8 @@ public class CursosRestService {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public Response altera(@PathParam("id") Long id, CursoDTO dto) {
-		Curso p = Mappers.converteParaEntidade(dto);
+	public Response altera(@PathParam("id") Long id, DisciplinaDTO dto) {
+		Disciplina p = Mappers.converteParaEntidade(dto);
 		p.setId(id);
 		session.altera(p);
 		return Response.ok().build();
@@ -82,7 +68,7 @@ public class CursosRestService {
 	@DELETE
 	@Path("/{id}")
 	public Response remove(@PathParam("id") Long id) {
-		Curso c = session.buscaPorId(id);
+		Disciplina c = session.buscaPorId(id);
 		if (c != null) { 
 			session.remove(c);
 		}
@@ -91,8 +77,8 @@ public class CursosRestService {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response insere(CursoDTO dto) {
-		Curso c = Mappers.converteParaEntidade(dto);
+	public Response insere(DisciplinaDTO dto) {
+		Disciplina c = Mappers.converteParaEntidade(dto);
 		session.insere(c);
 		if (c != null && c.getId() != null) {
 			try {
@@ -104,5 +90,5 @@ public class CursosRestService {
 		}
 		
 		return Response.noContent().build();
-	}
+	}	
 }

@@ -12,6 +12,8 @@ import org.jboss.ws.api.annotation.WebContext;
 
 import com.ejb.intf.AreasSession;
 import com.model.ejb.entity.Area;
+import com.model.ejb.entity.Curso;
+import com.model.ejb.entity.Disciplina;
 
 @Stateless
 @WebService(name="areas")
@@ -49,6 +51,20 @@ public class AreaSessionBean implements AreasSession {
 	@SuppressWarnings("unchecked")
 	public List<Area> buscaTodos() {
 		Query q = em.createNamedQuery("busca.todas.areas");
+		return q.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Curso> buscaCursos(Area a) {
+		Query q = em.createNamedQuery("busca.cursos.area").setParameter("area", a);
+		return q.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Disciplina> buscaDisciplinas(Area a) {
+		Query q = em.createNamedQuery("busca.disciplinas.area").setParameter("area", a);
 		return q.getResultList();
 	}
 }

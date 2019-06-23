@@ -14,7 +14,9 @@ import javax.persistence.Table;
 @Table(name = "Area")
 @SequenceGenerator(name = "Area_Sequence", sequenceName = "area_seq", allocationSize = 0, initialValue = 1)
 @NamedQueries({ 
-	@NamedQuery(name = "busca.todas.areas", query = "select a from Area as a") 
+	@NamedQuery(name = "busca.todas.areas", query = "select a from Area as a"),
+	@NamedQuery(name = "busca.disciplinas.area", query = "select d from Disciplina as d where d.area = :area"),
+	@NamedQuery(name = "busca.cursos.area", query = "select c from Disciplina as d JOIN d.curso c where d.area = :area")
 })
 public class Area {
 

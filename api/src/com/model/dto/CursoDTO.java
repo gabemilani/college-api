@@ -6,10 +6,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "curso")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CursoDTO implements Serializable{
+@XmlType(propOrder = { "id", "nome", "codigo" } )
+public class CursoDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	

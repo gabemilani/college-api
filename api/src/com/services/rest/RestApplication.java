@@ -16,6 +16,7 @@ public class RestApplication extends Application {
 		HashSet<Class<?>> set = new HashSet<Class<?>>();
 		set.add(CursosRestService.class);
 		set.add(AreasRestService.class);
+		set.add(DisciplinasRestService.class);
 		return set;
 	}
 
