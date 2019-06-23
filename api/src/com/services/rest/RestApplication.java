@@ -9,13 +9,13 @@ public class RestApplication extends Application {
 	HashSet<Object> singletons = new HashSet<Object>();
 
 	public RestApplication() {
-//		singletons.add(new Library());
 	}
 
 	@Override
 	public Set<Class<?>> getClasses() {
 		HashSet<Class<?>> set = new HashSet<Class<?>>();
 		set.add(CursosRestService.class);
+		set.add(AreasRestService.class);
 		return set;
 	}
 

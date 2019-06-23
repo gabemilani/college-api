@@ -19,17 +19,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.ejb.intf.CursosSession;
-import com.model.dto.CursoDTO;
-import com.model.ejb.entity.Curso;
+import com.ejb.intf.AreasSession;
+import com.model.dto.AreaDTO;
+import com.model.ejb.entity.Area;
 
-@Named("CursoRest")
+@Named("AreaRest")
 @RequestScoped
-@Path("cursos")
-public class CursosRestService extends AbstractRestService<Curso, CursoDTO> {
+@Path("areas")
+public class AreasRestService extends AbstractRestService<Area, AreaDTO> {
 
 	@EJB
-	private CursosSession session;
+	private AreasSession session;
 	
 	@Context
 	UriInfo uriInfo;
@@ -50,8 +50,8 @@ public class CursosRestService extends AbstractRestService<Curso, CursoDTO> {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public Response altera(@PathParam("id") Long id, CursoDTO dto) {
-		Curso p = converteParaEntidade(dto);
+	public Response altera(@PathParam("id") Long id, AreaDTO dto) {
+		Area p = converteParaEntidade(dto);
 		p.setId(id);
 		session.altera(p);
 		return Response.ok().build();
@@ -60,7 +60,7 @@ public class CursosRestService extends AbstractRestService<Curso, CursoDTO> {
 	@DELETE
 	@Path("/{id}")
 	public Response remove(@PathParam("id") Long id) {
-		Curso c = session.buscaPorId(id);
+		Area c = session.buscaPorId(id);
 		if (c != null) { 
 			session.remove(c);
 		}
@@ -69,8 +69,8 @@ public class CursosRestService extends AbstractRestService<Curso, CursoDTO> {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response insere(CursoDTO dto) {
-		Curso c = converteParaEntidade(dto);
+	public Response insere(AreaDTO dto) {
+		Area c = converteParaEntidade(dto);
 		session.insere(c);
 		if (c != null && c.getId() != null) {
 			try {
@@ -85,17 +85,17 @@ public class CursosRestService extends AbstractRestService<Curso, CursoDTO> {
 	}
 
 	@Override
-	protected CursoDTO converteParaDTO(Curso c) {
+	protected AreaDTO converteParaDTO(Area c) {
 		if (c != null) {
-			return new CursoDTO(c.getId(), c.getNome(), c.getCodigo());
+			return new AreaDTO(c.getId(), c.getNome(), c.getSigla());
 		}
 		return null;
 	}
 
 	@Override
-	protected Curso converteParaEntidade(CursoDTO dto) {
+	protected Area converteParaEntidade(AreaDTO dto) {
 		if (dto != null) {
-			return new Curso(dto.getId(), dto.getNome(), dto.getCodigo());
+			return new Area(dto.getId(), dto.getNome(), dto.getSigla());
 		}
 		return null;
 	}	
